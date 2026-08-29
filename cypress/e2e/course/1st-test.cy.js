@@ -6,7 +6,7 @@ beforeEach(() => {
   cy.contains('Form Layouts').click() // Click the 'Form Layouts' link
 })
 
-describe.skip('Test Suite 1', () => {
+describe('Test Suite 1', () => {
   afterEach(() => {
     // This will run after each test in this suite
   })
@@ -26,7 +26,7 @@ describe.skip('Test Suite 1', () => {
   })
 })
 
-it.skip('Hello World 1', () => {
+it('Hello World 1', () => {
   // by Tag
   cy.get('input')
   // by ID
@@ -46,7 +46,7 @@ it.skip('Hello World 1', () => {
   cy.get('[data-cy="inputEmail1"]')
 })
 
-it.skip('Cypress Locator Methods', () => {
+it('Cypress Locator Methods', () => {
   // get() - find an element in the page
   // find() - find an element within another element
   // contains() - find an element with specific text
@@ -57,9 +57,16 @@ it.skip('Cypress Locator Methods', () => {
   cy.contains('nb-card', 'Horizontal form').get() // it will always return all the elements in the page, regardless of the previous command; it will not find the button element within that card.
 })
 
-it.only('Child Elements', () => {
-  cy.contains('nb-card', 'Using the Grid').find('.row').find('button')
-  cy.get('nb-card').find('nb-radio-group').find('label').contains('Option 1')
-  cy.get('nb-card nb-radio-group').find('label').contains('Option 1')
+it('Child Elements', () => {
+  cy.contains('nb-card', 'Using the Grid').find('.row').find('button') // it will find the first nb-card element with the text 'Using the Grid', then find the first element with the class 'row' within that card, and then find the button element within that row
+  cy.get('nb-card').find('nb-radio-group').find('label').contains('Option 1') // it will find all the nb-card elements, then find the nb-radio-group element within each card, then find the label element within each radio group, and then find the label with the text 'Option 1' within those labels
+  cy.get('nb-card nb-radio-group').find('label').contains('Option 1') // it will find all the nb-radio-group elements that are descendants of the nb-card elements, then find the label element within each radio group, and then find the label with the text 'Option 1' within those labels
   cy.get('nb-card > nb-card-body [placeholder="Jane Doe"]') // it will find all the nb-card-body elements that are direct children of the nb-card elements
 })
+
+it.only('Parent Elements', () => {
+  cy.get('#inputEmail1').parents('form').find('button') // it will find the parent form element of the input with id 'inputEmail1' and then find the button element within that form
+  cy.contains('Using the Grid').parent().find('button') // it will find the parent element of the element with the text 'Using the Grid' and then find the button element within that parent
+  cy.get('#inputEmail1').parentsUntil('nb-card-body').find('button') // it will find all the parent elements of the input with id 'inputEmail1' until it reaches the form element, and then find the button element within those parents
+})
+
