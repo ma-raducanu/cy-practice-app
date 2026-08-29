@@ -104,24 +104,24 @@ it('Reusing Locators', () => {
 
 it('Extracting Values from Page', () => {
   // 1. Using a jQuery method
-  cy.get('[for="exampleInputEmail1"]').then( label => {
+  cy.get('[for="exampleInputEmail1"]').then(label => {
     const emailLabel = label.text() // this will return the text of the label element, which is 'Email address'
     console.log(emailLabel)
   })
   // 2. Using invoke method
-  cy.get('[for="exampleInputEmail1"]').invoke('text').then( emailLabel => {
+  cy.get('[for="exampleInputEmail1"]').invoke('text').then(emailLabel => {
     console.log(emailLabel)
   })
   cy.get('[for="exampleInputEmail1"]').invoke('text').as('emailLabel')
   cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
   // 3. Invoke attribute value
-  cy.get('#exampleInputEmail1').invoke('attr', 'placeholder').then( classValue => {
+  cy.get('#exampleInputEmail1').invoke('attr', 'placeholder').then(classValue => {
     console.log(classValue)
   cy.get('#exampleInputEmail1').should('have.attr', 'class', 'input-full-width size-medium status-basic shape-rectangle nb-transition')
   })
   // 4. Invoke input field value
   cy.get('#exampleInputEmail1').type('test@example.com')
-  cy.get('#exampleInputEmail1').invoke('prop', 'value').then( value => {
+  cy.get('#exampleInputEmail1').invoke('prop', 'value').then(value => {
     console.log(value)
   })
 })
@@ -129,19 +129,19 @@ it('Extracting Values from Page', () => {
 it('Assertions', () => {
   cy.get('[for="exampleInputEmail1"]').should('have.text', 'Email address') // this is a partial assertion
   cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address') // this is an exact assertion
-  cy.get('[for="exampleInputEmail1"]').then( label => {
+  cy.get('[for="exampleInputEmail1"]').then(label => {
     expect(label).to.have.text('Email address')
   })
-  cy.get('[for="exampleInputEmail1"]').then( label => {
+  cy.get('[for="exampleInputEmail1"]').then(label => {
     expect(label).to.contain('Email address')
   })
-  cy.get('[for="exampleInputEmail1"]').invoke('text').then( emailLabel => {
+  cy.get('[for="exampleInputEmail1"]').invoke('text').then(emailLabel => {
     expect(emailLabel).to.equal('Email address')
     cy.wrap(emailLabel).should('equal', 'Email address')
   })
 })
 
-it.only('Timeouts', () => {
+it('Timeouts', () => {
   cy.contains('Modal & Overlays').click()
   cy.contains('Dialog').click()
   cy.contains('Open with delay 10 seconds').click()
