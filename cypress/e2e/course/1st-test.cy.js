@@ -71,15 +71,8 @@ it('Parent Elements', () => {
 })
 
 it('Chains', () => { // it's not recommended to continue the chain after an action command, as it can lead to unexpected behavior; instead, you should use a new cy.get() command to start a new chain of commands.
-  cy.get('#inputEmail1')
-    .parents('form')
-    .find('button')
-    .click()
-  cy.get('#inputEmail1')
-    .parents('form')
-    .find('nb-radio')
-    .first()
-    .should('have.text', 'Option 1')
+  cy.get('#inputEmail1').parents('form').find('button').click()
+  cy.get('#inputEmail1').parents('form').find('nb-radio').first().should('have.text', 'Option 1')
 })
 
 it('Reusing Locators', () => {
