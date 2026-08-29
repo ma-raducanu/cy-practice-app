@@ -6,7 +6,27 @@ beforeEach(() => {
   cy.contains('Form Layouts').click() // Click the 'Form Layouts' link
 })
 
-it('Hello World 1', () => {
+describe.skip('Test Suite 1', () => {
+  afterEach(() => {
+    // This will run after each test in this suite
+  })
+  it('Hello World 2', () => {
+    // This test will run after the beforeEach hook and before the afterEach hook
+  })
+  it('Hello World 3', () => {
+    // This test will also run after the beforeEach hook and before the afterEach hook
+  })
+  describe('Test Suite 2', () => {
+    it('Hello World 4', () => {
+      // This test will run after the beforeEach hook and before the afterEach hook of the parent suite
+    })
+    it('Hello World 5', () => {
+      // This test will also run after the beforeEach hook and before the afterEach hook of the parent suite
+    })
+  })
+})
+
+it.skip('Hello World 1', () => {
   // by Tag
   cy.get('input')
   // by ID
@@ -26,7 +46,7 @@ it('Hello World 1', () => {
   cy.get('[data-cy="inputEmail1"]')
 })
 
-it.only('Cypress Locator Methods', () => {
+it.skip('Cypress Locator Methods', () => {
   // get() - find an element in the page
   // find() - find an element within another element
   // contains() - find an element with specific text
@@ -37,22 +57,9 @@ it.only('Cypress Locator Methods', () => {
   cy.contains('nb-card', 'Horizontal form').get() // it will always return all the elements in the page, regardless of the previous command; it will not find the button element within that card.
 })
 
-describe.skip('Test Suite 1', () => {
-  afterEach(() => {
-    // This will run after each test in this suite
-  })
-  it('Hello World 2', () => {
-    // This test will run after the beforeEach hook and before the afterEach hook
-  })
-  it('Hello World 3', () => {
-    // This test will also run after the beforeEach hook and before the afterEach hook
-  })
-  describe('Test Suite 2', () => {
-    it('Hello World 4', () => {
-      // This test will run after the beforeEach hook and before the afterEach hook of the parent suite
-    })
-    it('Hello World 5', () => {
-      // This test will also run after the beforeEach hook and before the afterEach hook of the parent suite
-    })
-  })
+it.only('Child Elements', () => {
+  cy.contains('nb-card', 'Using the Grid').find('.row').find('button')
+  cy.get('nb-card').find('nb-radio-group').find('label').contains('Option 1')
+  cy.get('nb-card nb-radio-group').find('label').contains('Option 1')
+  cy.get('nb-card > nb-card-body [placeholder="Jane Doe"]') // it will find all the nb-card-body elements that are direct children of the nb-card elements
 })
