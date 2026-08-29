@@ -64,9 +64,64 @@ it('Child Elements', () => {
   cy.get('nb-card > nb-card-body [placeholder="Jane Doe"]') // it will find all the nb-card-body elements that are direct children of the nb-card elements
 })
 
-it.only('Parent Elements', () => {
+it('Parent Elements', () => {
   cy.get('#inputEmail1').parents('form').find('button') // it will find the parent form element of the input with id 'inputEmail1' and then find the button element within that form
   cy.contains('Using the Grid').parent().find('button') // it will find the parent element of the element with the text 'Using the Grid' and then find the button element within that parent
   cy.get('#inputEmail1').parentsUntil('nb-card-body').find('button') // it will find all the parent elements of the input with id 'inputEmail1' until it reaches the form element, and then find the button element within those parents
 })
 
+it('Chains', () => { // it's not recommended to continue the chain after an action command, as it can lead to unexpected behavior; instead, you should use a new cy.get() command to start a new chain of commands.
+  cy.get('#inputEmail1')
+    .parents('form')
+    .find('button')
+    .click()
+  cy.get('#inputEmail1')
+    .parents('form')
+    .find('nb-radio')
+    .first()
+    .should('have.text', 'Option 1')
+})
+
+it('Reusing Locators', () => {
+  // this won't work, see Cypress Alias
+  // const inputEmail1 = cy.get('#inputEmail1')
+  // inputEmail1.parents('form').find('button')
+  // inputEmail1.parents('form').find('nb-radio')
+
+  // 1. Cypress Alias
+  cy.get('#inputEmail1').as('inputEmail1') // "as" will create an alias for the input with id 'inputEmail1', which can be reused globally
+  cy.get('@inputEmail1').parents('form').find('button')
+  cy.get('@inputEmail1').parents('form').find('nb-radio')
+  // 2.Cypress then() method
+  cy.get('#inputEmail1').then(inputEmail => { // "then" will return a JQuery object that needs to be wrapped
+    cy.wrap(inputEmail).parents('form').find('button') // "wrap" will convert any object into Cypress format
+    cy.wrap(inputEmail).parents('form').find('nb-radio')
+    cy.wrap('Hello').should('equal', 'Hello')
+    cy.wrap(inputEmail).as('inputEmail2')
+  })
+  cy.get('@inputEmail2').click()
+})
+
+it.only('Extracting Values', () => {
+  // 1. Using a JQuery method
+  cy.get('[for="exampleInputEmail1"]').then( label => {
+    const emailLabel = label.text() // this will return the text of the label element, which is 'Email address'
+    console.log(emailLabel)
+  })
+  // 2. Using invoke method
+  cy.get('[for="exampleInputEmail1"]').invoke('text').then( emailLabel => {
+    console.log(emailLabel)
+  })
+  cy.get('[for="exampleInputEmail1"]').invoke('text').as('emailLabel')
+  cy.get('[for="exampleInputEmail1"]').should('contain', 'Email address')
+  // 3. Invoke attribute value
+  cy.get('#exampleInputEmail1').invoke('attr', 'placeholder').then( classValue => {
+    console.log(classValue)
+  cy.get('#exampleInputEmail1').should('have.attr', 'class', 'input-full-width size-medium status-basic shape-rectangle nb-transition')
+  })
+  // 4. Invoke input field value
+  cy.get('#exampleInputEmail1').type('test@example.com')
+  cy.get('#exampleInputEmail1').invoke('prop', 'value').then( value => {
+    console.log(value)
+  })
+})
