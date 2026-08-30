@@ -1,4 +1,4 @@
-function selectGroupMenuItem(groupItemName) { // this function checks whether the menu item is expanded or collapsed
+function selectGroupMenuItem(groupItemName) { // this function checks whether the menu item is expanded or collapsed before clicking
   cy.contains('a', groupItemName).invoke('attr', 'aria-expanded').then(attr => {
     if (attr.includes('false')) {
       cy.contains('a', groupItemName).click()

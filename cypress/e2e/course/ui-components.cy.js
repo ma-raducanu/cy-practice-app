@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { navigateTo } from "../../page-objects/navigation-page"
+import { navigateTo } from "../../page-objects/navigation.page"
 
 beforeEach(() => {
   cy.visit('/')
