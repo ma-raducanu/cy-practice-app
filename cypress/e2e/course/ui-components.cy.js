@@ -21,8 +21,8 @@ it('Radio Buttons', () => {
   cy.contains('Forms').click()
   cy.contains('Form Layouts').click()
   cy.contains('nb-card', 'Using the Grid').find('[type="radio"]').then(allRadioButtons => {
-    cy.wrap(allRadioButtons).eq(0).check({force: true}).should('be.checked') // "eq" is index, and use force true only if no alternative is viable, as it will cause flakiness
-    cy.wrap(allRadioButtons).eq(1).check({force: true})
+    cy.wrap(allRadioButtons).eq(0).check({ force: true }).should('be.checked') // "eq" is index, and use force true only if no alternative is viable, as it will cause flakiness
+    cy.wrap(allRadioButtons).eq(1).check({ force: true })
     cy.wrap(allRadioButtons).eq(0).should('not.be.checked')
     cy.wrap(allRadioButtons).eq(2).should('be.disabled')
   })
@@ -33,9 +33,9 @@ it('Radio Buttons', () => {
 it('Checkboxes', () => {
   cy.contains('Modal & Overlays').click()
   cy.contains('Toastr').click()
-  cy.get('[type="checkbox"]').check({force: true})
+  cy.get('[type="checkbox"]').check({ force: true })
   cy.get('[type="checkbox"]').should('be.checked')
-  cy.get('[type="checkbox"]').click({force: true, multiple: true}) // check() will check all boxes when no specific box is targetted, and click() can be used to click multiple elements at the same time but needs the {multiple: true} argument
+  cy.get('[type="checkbox"]').click({ force: true, multiple: true }) // check() will check all boxes when no specific box is targetted, and click() can be used to click multiple elements at the same time but needs the {multiple: true} argument
   cy.get('[type="checkbox"]').should('not.be.checked')
 })
 
@@ -63,7 +63,7 @@ it('Tooltips', () => {
   cy.get('nb-tooltip').should('have.text', 'This is a tooltip')
 })
 
-it.only('Dialog Boxes', () => {
+it('Dialog Boxes', () => {
   cy.contains('Tables & Data').click()
   cy.contains('Smart Table').click()
   // 1. This method won't guarantee that the dialog box is displayed
@@ -77,4 +77,40 @@ it.only('Dialog Boxes', () => {
   })
   cy.get('.nb-trash').first().click()
   cy.get('@dialogBox').should('be.calledWith', 'Are you sure you want to delete?')
+})
+
+it.only('Dialog Boxes', () => {
+  cy.contains('Tables & Data').click()
+  cy.contains('Smart Table').click()
+  // 1. This method will find a specific row that contains a unique value, like text
+  cy.get('tbody').contains('tr', 'Larry').then(tableRow => {
+    cy.wrap(tableRow).find('.nb-edit').click()
+    cy.wrap(tableRow).find('[placeholder="Age"]').clear().type('35')
+    cy.wrap(tableRow).find('.nb-checkmark').click()
+    cy.wrap(tableRow).find('td').last().should('have.text', '35') // last targets the last row in this case, as the rows do not have a unique identifier
+  })
+  // 2. This method will find a specific row by index
+  cy.get('.nb-plus').click()
+  cy.get('thead tr').eq(2).then(tableRow => {
+    cy.wrap(tableRow).find('[placeholder="First Name"]').type('John')
+    cy.wrap(tableRow).find('[placeholder="Last Name"]').type('Smith')
+    cy.wrap(tableRow).find('.nb-checkmark').click()
+  })
+  cy.get('tbody tr').first().find('td').then(tableColumns => {
+    cy.wrap(tableColumns).eq(2).should('have.text', 'John')
+    cy.wrap(tableColumns).eq(3).should('have.text', 'Smith')
+  })
+  // 3. This method will loop through the rows
+  const ages = [20, 30, 40, 200]
+  cy.wrap(ages).each(age => {
+    cy.get('[placeholder="Age"]').clear().type(age)
+    cy.wait(500)
+    cy.get('tbody tr').each(tableRows => { // cypress remembers this data so if you save the dom data before asserting, it will fail as it will compare the old dom data to the new dom data, which is now filtered, so a hard wait may be required for the dom data to be updated before making the assertion, although you may want to think of a different solution in a real scenario
+      if (age == 200) {
+        cy.wrap(tableRows).should('contain.text', 'No data found')
+      } else {
+        cy.wrap(tableRows).find('td').last().should('have.text', age)
+      }
+    })
+  })
 })

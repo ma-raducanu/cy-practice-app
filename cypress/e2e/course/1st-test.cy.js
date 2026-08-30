@@ -110,7 +110,7 @@ it('Extracting Values from Page', () => {
   // 3. Invoke attribute value
   cy.get('#exampleInputEmail1').invoke('attr', 'placeholder').then(classValue => {
     console.log(classValue)
-  cy.get('#exampleInputEmail1').should('have.attr', 'class', 'input-full-width size-medium status-basic shape-rectangle nb-transition')
+    cy.get('#exampleInputEmail1').should('have.attr', 'class', 'input-full-width size-medium status-basic shape-rectangle nb-transition')
   })
   // 4. Invoke input field value
   cy.get('#exampleInputEmail1').type('test@example.com')
@@ -138,5 +138,5 @@ it('Timeouts', () => {
   cy.contains('Modal & Overlays').click()
   cy.contains('Dialog').click()
   cy.contains('Open with delay 10 seconds').click()
-  cy.get('nb-dialog-container nb-card-header', {timeout: 11000}).should('have.text', 'Friendly reminder') // the timeout needs to be added in the action (get in this case), and not in the assertion for it to work
+  cy.get('nb-dialog-container nb-card-header', { timeout: 11000 }).should('have.text', 'Friendly reminder') // the timeout needs to be added in the action (get in this case), and not in the assertion for it to work
 })
