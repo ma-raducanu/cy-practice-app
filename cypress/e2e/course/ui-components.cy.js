@@ -115,7 +115,7 @@ it('Web Tables', () => {
   })
 })
 
-it.only('Datepickers', () => {
+it('Datepickers', () => {
   cy.contains('Forms').click()
   cy.contains('Datepicker').click()
   function selectDateFromCurrentDay(day) {
@@ -141,4 +141,12 @@ it.only('Datepickers', () => {
     const dateToAssert = selectDateFromCurrentDay(200)
     cy.wrap(input).should('have.value', dateToAssert)
   })
+})
+
+it.only('Sliders', () => {
+  cy.get('[tabtitle="Temperature"] circle')
+    .invoke('attr', 'cx', '42.87')
+    .invoke('attr', 'cy', '52.49')
+    .click()
+  cy.get('.value.temperature.h1').should('contain.text', '18')
 })
