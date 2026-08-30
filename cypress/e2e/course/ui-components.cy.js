@@ -79,7 +79,7 @@ it('Dialog Boxes', () => {
   cy.get('@dialogBox').should('be.calledWith', 'Are you sure you want to delete?')
 })
 
-it.only('Dialog Boxes', () => {
+it.only('Web Tables', () => {
   cy.contains('Tables & Data').click()
   cy.contains('Smart Table').click()
   // 1. This method will find a specific row that contains a unique value, like text
