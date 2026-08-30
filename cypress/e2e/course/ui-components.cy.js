@@ -1,12 +1,13 @@
 /// <reference types="cypress" />
 
+import { navigateTo } from "../../page-objects/navigation-page"
+
 beforeEach(() => {
   cy.visit('/')
 })
 
 it('Input Fields', () => {
-  cy.contains('Forms').click()
-  cy.contains('Form Layouts').click()
+  navigateTo.formLayoutsPage()
   cy.get('#inputEmail1').type('test@example.com', { delay: 200 }).clear().type('hello').clear() // this will add a delay to cypress's typing speed, and after it has finished typing, it will clear the input field and enter the other text
   const name = 'mircea'
   cy.contains('nb-card', 'Using the Grid').contains('Email').type(`${name}@test.com`)
@@ -18,8 +19,7 @@ it('Input Fields', () => {
 })
 
 it('Radio Buttons', () => {
-  cy.contains('Forms').click()
-  cy.contains('Form Layouts').click()
+  navigateTo.formLayoutsPage()
   cy.contains('nb-card', 'Using the Grid').find('[type="radio"]').then(allRadioButtons => {
     cy.wrap(allRadioButtons).eq(0).check({ force: true }).should('be.checked') // "eq" is index, and use force true only if no alternative is viable, as it will cause flakiness
     cy.wrap(allRadioButtons).eq(1).check({ force: true })
@@ -31,8 +31,7 @@ it('Radio Buttons', () => {
 })
 
 it('Checkboxes', () => {
-  cy.contains('Modal & Overlays').click()
-  cy.contains('Toastr').click()
+  navigateTo.toastrPage()
   cy.get('[type="checkbox"]').check({ force: true })
   cy.get('[type="checkbox"]').should('be.checked')
   cy.get('[type="checkbox"]').click({ force: true, multiple: true }) // check() will check all boxes when no specific box is targetted, and click() can be used to click multiple elements at the same time but needs the {multiple: true} argument
@@ -40,8 +39,7 @@ it('Checkboxes', () => {
 })
 
 it('Lists and Dropdowns', () => {
-  cy.contains('Modal & Overlays').click()
-  cy.contains('Toastr').click()
+  navigateTo.toastrPage()
   cy.contains('div', 'Toast type:').find('select').select('info').should('have.value', 'info') // select is the native selector for dropdown fields, also, it's smart and it will select either the value attribute's value or the label
   cy.contains('div', 'Position:').find('nb-select').click()
   cy.get('.option-list').contains('bottom-right').click()
@@ -57,15 +55,13 @@ it('Lists and Dropdowns', () => {
 })
 
 it('Tooltips', () => {
-  cy.contains('Modal & Overlays').click()
-  cy.contains('Dialog').click()
+  navigateTo.tooltipPage()
   cy.contains('button', 'Top').trigger('mouseenter') // inspect > "Elements" > "Event Listeners" and check all available events to determine which one is required as cypress does not support hover
   cy.get('nb-tooltip').should('have.text', 'This is a tooltip')
 })
 
 it('Dialog Boxes', () => {
-  cy.contains('Tables & Data').click()
-  cy.contains('Smart Table').click()
+  navigateTo.tablesAndDataPage()
   // 1. This method won't guarantee that the dialog box is displayed
   cy.get('.nb-trash').first().click()
   cy.on('window:confirm', confirm => {
@@ -80,8 +76,7 @@ it('Dialog Boxes', () => {
 })
 
 it('Web Tables', () => {
-  cy.contains('Tables & Data').click()
-  cy.contains('Smart Table').click()
+  navigateTo.tablesAndDataPage()
   // 1. This method will find a specific row that contains a unique value, like text
   cy.get('tbody').contains('tr', 'Larry').then(tableRow => {
     cy.wrap(tableRow).find('.nb-edit').click()
@@ -116,8 +111,7 @@ it('Web Tables', () => {
 })
 
 it('Datepickers', () => {
-  cy.contains('Forms').click()
-  cy.contains('Datepicker').click()
+  navigateTo.datepickerPage()
   function selectDateFromCurrentDay(day) {
     let date = new Date()
     date.setDate(date.getDate() + day)
@@ -152,20 +146,18 @@ it('Sliders', () => {
 })
 
 it('Drag and Drop', () => {
-  cy.contains('Extra Components').click()
-  cy.contains('Drag & Drop').click()
+  navigateTo.dragAndDropPage()
   cy.get('#todo-list div').first().trigger('dragstart')
   cy.get('#drop-list').trigger('drop')
 })
 
-it.only('iFrames', () => {
-  cy.contains('Modal & Overlays').click()
-  cy.contains('Dialog').click()
+it('iFrames', () => {
+  navigateTo.dialogPage()
   // 1. "frameLoaded" method
   cy.frameLoaded('[data-cy="esc-close-iframe"]') // you must first wait for the frame to load
   cy.iframe('[data-cy="esc-close-iframe"]').contains('Open Dialog with esc close').click()
   cy.contains('Dismiss Dialog').click()
-  // 2. "enter" method which is useful when interacting with multiple elements inside he iFrame
+  // 2. "enter" method which is useful when interacting with multiple elements inside the iFrame
   cy.enter('[data-cy="esc-close-iframe"]').then(getBody => {
     getBody().contains('Open Dialog with esc close').click()
     cy.contains('Dismiss Dialog').click()

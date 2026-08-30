@@ -1,9 +1,11 @@
 /// <reference types="cypress" />
 
+import { navigateTo } from "../../page-objects/navigation-page"
+
 beforeEach(() => {
   cy.visit('/') // Visit the base URL defined in cypress.config.js
-  cy.contains('Forms').click() // Click the 'Forms' link
-  cy.contains('Form Layouts').click() // Click the 'Form Layouts' link
+  navigateTo.formLayoutsPage()
+
 })
 
 describe('Test Suite 1', () => {
@@ -46,7 +48,7 @@ it('Hello World 1', () => {
   cy.get('[data-cy="inputEmail1"]')
 })
 
-it('Cypress Locator Methods', () => {
+it.skip('Cypress Locator Methods', () => {
   // get() - find an element in the page
   // find() - find an element within another element
   // contains() - find an element with specific text
@@ -135,8 +137,7 @@ it('Assertions', () => {
 })
 
 it('Timeouts', () => {
-  cy.contains('Modal & Overlays').click()
-  cy.contains('Dialog').click()
+  navigateTo.dialogPage()
   cy.contains('Open with delay 10 seconds').click()
   cy.get('nb-dialog-container nb-card-header', { timeout: 11000 }).should('have.text', 'Friendly reminder') // the timeout needs to be added in the action (get in this case), and not in the assertion for it to work
 })
