@@ -86,7 +86,7 @@ it('Reusing Locators', () => {
   cy.get('@inputEmail1').parents('form').find('button')
   cy.get('@inputEmail1').parents('form').find('nb-radio')
   // 2.Cypress then() method
-  cy.get('#inputEmail1').then(inputEmail => { // "then" will return a JQuery object that needs to be wrapped
+  cy.get('#inputEmail1').then(inputEmail => { // "then" will return a jQuery object that needs to be wrapped
     cy.wrap(inputEmail).parents('form').find('button') // "wrap" will convert any object into Cypress format
     cy.wrap(inputEmail).parents('form').find('nb-radio')
     cy.wrap('Hello').should('equal', 'Hello')

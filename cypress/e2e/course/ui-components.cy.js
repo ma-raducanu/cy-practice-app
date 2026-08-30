@@ -30,11 +30,28 @@ it('Radio Buttons', () => {
   cy.contains('nb-card', 'Using the Grid').contains('label', 'Option 1').find('input').check({force: true})
 })
 
-it.only('Checkboxes', () => {
+it('Checkboxes', () => {
   cy.contains('Modal & Overlays').click()
   cy.contains('Toastr').click()
   cy.get('[type="checkbox"]').check({force: true})
   cy.get('[type="checkbox"]').should('be.checked') 
   cy.get('[type="checkbox"]').click({force: true, multiple: true}) // check() will check all boxes when no specific box is targetted, and click() can be used to click multiple elements at the same time but needs the {multiple: true} argument
   cy.get('[type="checkbox"]').should('not.be.checked')
+})
+
+it.only('Lists and Dropdowns', () => {
+  cy.contains('Modal & Overlays').click()
+  cy.contains('Toastr').click()
+  cy.contains('div', 'Toast type:').find('select').select('info').should('have.value', 'info') // select is the native selector for dropdown fields, also, it's smart and it will select either the value attribute's value or the label
+  cy.contains('div', 'Position:').find('nb-select').click()
+  cy.get('.option-list').contains('bottom-right').click()
+  cy.contains('div', 'Position:').find('nb-select').should('have.text', 'bottom-right')
+  cy.contains('div', 'Position:').find('nb-select').then(dropdown => {
+    cy.wrap(dropdown).click()
+    cy.get('.option-list nb-option').each((option, index, list) => { // each is a loop, and can contain multiple arguments
+      cy.wrap(option).click()
+      if(index < list.length-1) // index starts with 0, but the list returns the actual number, which is 8, so at the end it will skip the final item as the 7 is not < 7
+        cy.wrap(dropdown).click()
+    })
+  })
 })
