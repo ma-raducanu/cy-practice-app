@@ -79,7 +79,7 @@ it('Dialog Boxes', () => {
   cy.get('@dialogBox').should('be.calledWith', 'Are you sure you want to delete?')
 })
 
-it.only('Web Tables', () => {
+it('Web Tables', () => {
   cy.contains('Tables & Data').click()
   cy.contains('Smart Table').click()
   // 1. This method will find a specific row that contains a unique value, like text
@@ -112,5 +112,33 @@ it.only('Web Tables', () => {
         cy.wrap(tableRows).find('td').last().should('have.text', age)
       }
     })
+  })
+})
+
+it.only('Datepickers', () => {
+  cy.contains('Forms').click()
+  cy.contains('Datepicker').click()
+  function selectDateFromCurrentDay(day) {
+    let date = new Date()
+    date.setDate(date.getDate() + day)
+    let futureDay = date.getDate()
+    let futureMonthShort = date.toLocaleDateString('en-US', { month: 'short' })
+    let futureMonthLong = date.toLocaleDateString('en-US', { month: 'long' })
+    let futureYear = date.getFullYear()
+    let dateToAssert = `${futureMonthShort} ${futureDay}, ${futureYear}`
+    cy.get('nb-calendar-view-mode').invoke('text').then(calendarMonthAndYear => {
+      if (!calendarMonthAndYear.includes(futureMonthLong) || !calendarMonthAndYear.includes(futureYear)) {
+        cy.get('[data-name="chevron-right"]').click()
+        selectDateFromCurrentDay(day) // the function will call and re-execute itself
+      } else {
+        cy.get('.day-cell').not('.bounding-month').contains(futureDay).click()
+      }
+    })
+    return dateToAssert
+  }
+  cy.get('[placeholder="Form Picker"]').then(input => {
+    cy.wrap(input).click()
+    const dateToAssert = selectDateFromCurrentDay(200)
+    cy.wrap(input).should('have.value', dateToAssert)
   })
 })
