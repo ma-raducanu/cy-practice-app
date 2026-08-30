@@ -151,9 +151,25 @@ it('Sliders', () => {
   cy.get('.value.temperature.h1').should('contain.text', '18')
 })
 
-it.only('Drag and Drop', () => {
+it('Drag and Drop', () => {
   cy.contains('Extra Components').click()
   cy.contains('Drag & Drop').click()
   cy.get('#todo-list div').first().trigger('dragstart')
   cy.get('#drop-list').trigger('drop')
+})
+
+it.only('iFrames', () => {
+  cy.contains('Modal & Overlays').click()
+  cy.contains('Dialog').click()
+  // 1. "frameLoaded" method
+  cy.frameLoaded('[data-cy="esc-close-iframe"]') // you must first wait for the frame to load
+  cy.iframe('[data-cy="esc-close-iframe"]').contains('Open Dialog with esc close').click()
+  cy.contains('Dismiss Dialog').click()
+  // 2. "enter" method which is useful when interacting with multiple elements inside he iFrame
+  cy.enter('[data-cy="esc-close-iframe"]').then(getBody => {
+    getBody().contains('Open Dialog with esc close').click()
+    cy.contains('Dismiss Dialog').click()
+    getBody().contains('Open Dialog without esc close').click()
+    cy.contains('OK').click()
+  })
 })
