@@ -5,7 +5,8 @@ import { onFormLayoutsPage } from "../../page-objects/form-layouts.page"
 import { navigateTo } from "../../page-objects/navigation.page"
 
 beforeEach(() => {
-  cy.visit('/')
+  // cy.visit('/')
+  cy.openHomePage() // from commands, but it will not appear in the suggestions and you can't ctrl + click to go to the method unless you declare it in index.d.ts
 })
 
 it('Navigation test', () => {
