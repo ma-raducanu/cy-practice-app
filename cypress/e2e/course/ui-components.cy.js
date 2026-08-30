@@ -21,8 +21,8 @@ it('Radio Buttons', () => {
   cy.contains('Forms').click()
   cy.contains('Form Layouts').click()
   cy.contains('nb-card', 'Using the Grid').find('[type="radio"]').then(allRadioButtons => {
-    cy.wrap(allRadioButtons).eq(0).check({ force: true }).should('be.checked') // "eq" is index, and use force true only if no alternative is viable, as it will cause flakiness
-    cy.wrap(allRadioButtons).eq(1).check({ force: true })
+    cy.wrap(allRadioButtons).eq(0).check({force: true}).should('be.checked') // "eq" is index, and use force true only if no alternative is viable, as it will cause flakiness
+    cy.wrap(allRadioButtons).eq(1).check({force: true})
     cy.wrap(allRadioButtons).eq(0).should('not.be.checked')
     cy.wrap(allRadioButtons).eq(2).should('be.disabled')
   })
@@ -33,9 +33,9 @@ it('Radio Buttons', () => {
 it('Checkboxes', () => {
   cy.contains('Modal & Overlays').click()
   cy.contains('Toastr').click()
-  cy.get('[type="checkbox"]').check({ force: true })
+  cy.get('[type="checkbox"]').check({force: true})
   cy.get('[type="checkbox"]').should('be.checked')
-  cy.get('[type="checkbox"]').click({ force: true, multiple: true }) // check() will check all boxes when no specific box is targetted, and click() can be used to click multiple elements at the same time but needs the {multiple: true} argument
+  cy.get('[type="checkbox"]').click({force: true, multiple: true}) // check() will check all boxes when no specific box is targetted, and click() can be used to click multiple elements at the same time but needs the {multiple: true} argument
   cy.get('[type="checkbox"]').should('not.be.checked')
 })
 
@@ -56,9 +56,25 @@ it('Lists and Dropdowns', () => {
   })
 })
 
-it.only('Tooltips', () => {
+it('Tooltips', () => {
   cy.contains('Modal & Overlays').click()
-  cy.contains('Tooltip').click()
+  cy.contains('Dialog').click()
   cy.contains('button', 'Top').trigger('mouseenter') // inspect > "Elements" > "Event Listeners" and check all available events to determine which one is required as cypress does not support hover
   cy.get('nb-tooltip').should('have.text', 'This is a tooltip')
+})
+
+it.only('Dialog Boxes', () => {
+  cy.contains('Tables & Data').click()
+  cy.contains('Smart Table').click()
+  // 1. This method won't guarantee that the dialog box is displayed
+  cy.get('.nb-trash').first().click()
+  cy.on('window:confirm', confirm => {
+    expect(confirm).to.equal('Are you sure you want to delete?')
+  })
+  // 2.
+  cy.window().then(win => {
+    cy.stub(win, 'confirm').as('dialogBox').returns(false) // stub remembers if the confirmed event took place or not; true will confirm and perform the action while false will dismiss the action
+  })
+  cy.get('.nb-trash').first().click()
+  cy.get('@dialogBox').should('be.calledWith', 'Are you sure you want to delete?')
 })
