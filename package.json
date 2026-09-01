@@ -7,10 +7,19 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress-regression": "npx cypress run",
+    "cypress-regression-chrome": "npx cypress run --browser chrome",
+    "cypress-regression-edge": "npx cypress run --browser edge",
+    "cypress-regression-all": "npm-run-all -p cypress-regression cypress-regression-chrome cypress-regression-edge",
+    "cypress-smoke": "npx cypress run --spec 'cypress/e2e/1st-test.cy.js'",
+    "cypress-smoke-chrome": "npx cypress run --spec 'cypress/e2e/1st-test.cy.js' --browser chrome",
+    "cypress-smoke-edge": "npx cypress run --spec 'cypress/e2e/1st-test.cy.js' --browser edge",
+    "cypress-smoke-all": "npm-run-all -p cypress-smoke cypress-smoke-chrome cypress-smoke-edge"
   },
   "devDependencies": {
     "cypress": "^15.21.1",
-    "cypress-iframe": "^1.0.1"
+    "cypress-iframe": "^1.0.1",
+    "npm-run-all": "^4.1.5"
   }
 }
